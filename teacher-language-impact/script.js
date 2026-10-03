@@ -16,19 +16,40 @@ const browserLocale = (navigator.languages && navigator.languages[0]) || navigat
 const browserLanguage = browserLocale.toLowerCase().split("-")[0];
 const urlParams = new URLSearchParams(location.search);
 const proxyLanguage = (urlParams.get("_x_tr_tl") || "").toLowerCase().split("-")[0];
-const currentTargetLanguage = proxyLanguage || browserLanguage;
 const isTranslateProxy = location.hostname.includes("translate.goog") || location.hostname.includes("translate.google");
 const stayArabic = urlParams.get("stay") === "ar";
+
+const languageAliases = {
+  "fas":"fa","per":"fa","urd":"ur","pus":"ps","ara":"ar","eng":"en","fra":"fr","fre":"fr",
+  "ind":"id","msa":"ms","tur":"tr","rus":"ru","bos":"bs","som":"so","hau":"ha","yor":"yo",
+  "swa":"sw","uzb":"uz","kaz":"kk","kir":"ky","tgk":"tg","aze":"az","ben":"bn","hin":"hi",
+  "tam":"ta","tel":"te","mal":"ml","sin":"si","tha":"th","vie":"vi","khm":"km","mya":"my",
+  "zho":"zh-CN","chi":"zh-CN","kor":"ko","jpn":"ja","por":"pt","spa":"es","deu":"de","ger":"de"
+};
+
+function normalizeLanguage(code){
+  if(!code) return "ar";
+  const clean = String(code).trim().toLowerCase();
+  const base = clean.split("-")[0];
+  return languageAliases[clean] || languageAliases[base] || clean;
+}
 
 function languageName(code){
   try{
     const display = new Intl.DisplayNames([browserLocale], {type:"language"});
     return display.of(code) || code.toUpperCase();
-  }catch(e){ return code.toUpperCase(); }
+  }catch(e){ return String(code).toUpperCase(); }
+}
+
+function countryName(code){
+  try{
+    const display = new Intl.DisplayNames([browserLocale], {type:"region"});
+    return display.of(code) || code;
+  }catch(e){ return code; }
 }
 
 function setDirection(code){
-  document.documentElement.dir = rtlLanguages.has(code) ? "rtl" : "ltr";
+  document.documentElement.dir = rtlLanguages.has(normalizeLanguage(code).split("-")[0]) ? "rtl" : "ltr";
 }
 
 function translationUrl(code){
@@ -37,46 +58,95 @@ function translationUrl(code){
   clean.searchParams.delete("_x_tr_sl");
   clean.searchParams.delete("_x_tr_tl");
   clean.searchParams.delete("_x_tr_hl");
-  return "https://translate.google.com/translate?sl=ar&tl=" + encodeURIComponent(code) + "&u=" + encodeURIComponent(clean.toString());
+  return "https://translate.google.com/translate?sl=ar&tl=" + encodeURIComponent(normalizeLanguage(code)) + "&u=" + encodeURIComponent(clean.toString());
 }
 
-function configureLanguageExperience(){
+function chooseCountryLanguage(apiLanguages){
+  const langs = String(apiLanguages || "")
+    .split(",")
+    .map(normalizeLanguage)
+    .filter(Boolean);
+  if(!langs.length) return browserLanguage;
+
+  const browserBase = normalizeLanguage(browserLanguage).split("-")[0];
+  const matching = langs.find(lang => normalizeLanguage(lang).split("-")[0] === browserBase);
+  return matching || langs[0];
+}
+
+async function detectStudentCountry(){
+  try{
+    const controller = new AbortController();
+    const timer = setTimeout(()=>controller.abort(), 3500);
+    const response = await fetch("https://ipapi.co/json/", {
+      signal: controller.signal,
+      headers: {"Accept":"application/json"}
+    });
+    clearTimeout(timer);
+    if(!response.ok) throw new Error("country detection failed");
+    const data = await response.json();
+    return {
+      code: data.country_code || data.country || "",
+      name: data.country_name || "",
+      languages: data.languages || ""
+    };
+  }catch(e){
+    return null;
+  }
+}
+
+async function configureLanguageExperience(){
   const button = document.getElementById("languageButton");
   const status = document.getElementById("languageStatus");
   const notice = document.getElementById("languageNotice");
   const noticeText = document.getElementById("languageNoticeText");
+  const countryInput = document.querySelector('input[name="country"]');
 
   if(isTranslateProxy){
-    setDirection(currentTargetLanguage);
-    status.textContent = languageName(currentTargetLanguage);
+    const target = normalizeLanguage(proxyLanguage || browserLanguage);
+    setDirection(target);
+    status.textContent = languageName(target);
     notice.hidden = false;
-    noticeText.textContent = "واجهة مترجمة آليًا — تبقى أنشطة العربية والنماذج التدريبية بالعربية.";
-    button.addEventListener("click",()=>{ location.href = "?stay=ar"; });
+    noticeText.textContent = "واجهة مساندة مترجمة آليًا — تبقى أنشطة العربية والنماذج التدريبية بالعربية.";
+    button.addEventListener("click",()=>{ location.href = location.origin + location.pathname + "?stay=ar"; });
     return;
+  }
+
+  const detected = await detectStudentCountry();
+  const target = detected ? chooseCountryLanguage(detected.languages) : normalizeLanguage(browserLanguage);
+
+  if(detected && countryInput && !countryInput.value){
+    countryInput.value = detected.name || countryName(detected.code);
   }
 
   setDirection("ar");
-  if(browserLanguage === "ar" || stayArabic){
-    status.textContent = browserLanguage === "ar" ? "العربية" : languageName(browserLanguage);
-    if(browserLanguage !== "ar"){
-      notice.hidden = false;
-      noticeText.textContent = "لغة جهازك: " + languageName(browserLanguage) + " — يمكنك عرض الشروحات بلغتك مع إبقاء أنشطة العربية كما هي.";
-      button.addEventListener("click",()=>{ location.href = translationUrl(browserLanguage); });
-    }else{
-      button.addEventListener("click",()=>{ notice.hidden = !notice.hidden; });
-    }
+  status.textContent = detected
+    ? (detected.code + " · " + languageName(target))
+    : languageName(target);
+
+  if(detected){
+    notice.hidden = false;
+    noticeText.textContent =
+      "تم تحديد بلد الطالب تقريبياً: " +
+      (detected.name || countryName(detected.code)) +
+      " — لغة الواجهة المساندة: " + languageName(target) + ".";
+  }else if(browserLanguage !== "ar"){
+    notice.hidden = false;
+    noticeText.textContent =
+      "تعذر تحديد البلد، لذلك استُخدمت لغة الجهاز: " + languageName(target) + ".";
+  }
+
+  if(target === "ar" || stayArabic){
+    button.addEventListener("click",()=>{ notice.hidden = !notice.hidden; });
     return;
   }
 
-  status.textContent = languageName(browserLanguage);
-  notice.hidden = false;
-  noticeText.textContent = "تم اكتشاف لغة جهازك: " + languageName(browserLanguage) + " — سيتم فتح الواجهة المساندة بلغتك.";
-  button.addEventListener("click",()=>{ location.href = translationUrl(browserLanguage); });
+  button.addEventListener("click",()=>{ location.href = translationUrl(target); });
 
-  const alreadyRedirected = sessionStorage.getItem("teacherImpactAutoLang") === browserLanguage;
-  if(!alreadyRedirected){
-    sessionStorage.setItem("teacherImpactAutoLang", browserLanguage);
-    setTimeout(()=>{ location.href = translationUrl(browserLanguage); }, 700);
+  const sessionKey = "teacherImpactAutoLang:" + (detected?.code || "device") + ":" + target;
+  const alreadyRedirected = sessionStorage.getItem(sessionKey) === "1";
+  if(!alreadyRedirected && !stayArabic){
+    sessionStorage.setItem(sessionKey,"1");
+    setTimeout(()=>{ location.href = translationUrl(target); }, 850);
   }
 }
 configureLanguageExperience();
