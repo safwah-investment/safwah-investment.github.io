@@ -49,7 +49,9 @@ function countryName(code){
 }
 
 function setDirection(code){
-  document.documentElement.dir = rtlLanguages.has(normalizeLanguage(code).split("-")[0]) ? "rtl" : "ltr";
+  const normalized=normalizeLanguage(code);
+  document.documentElement.lang=normalized;
+  document.documentElement.dir = rtlLanguages.has(normalized.split("-")[0]) ? "rtl" : "ltr";
 }
 
 function translationUrl(code){
@@ -214,11 +216,20 @@ document.getElementById("impactForm").addEventListener("submit",e=>{
     message:fd.get("message").toString().trim()
   };
   if(!story.country||!story.level||!story.message)return;
-  const saved=JSON.parse(localStorage.getItem("teacherImpactStories")||"[]");
-  saved.unshift(story);
-  localStorage.setItem("teacherImpactStories",JSON.stringify(saved.slice(0,20)));
-  e.currentTarget.reset(); count.textContent="0";
-  document.getElementById("formStatus").textContent="تمت إضافة مشاركتك إلى جدار الأثر على هذا الجهاز.";
+  const submit=e.currentTarget.querySelector('button[type="submit"]');
+  if(submit) submit.disabled=true;
+  try{
+    const saved=JSON.parse(localStorage.getItem("teacherImpactStories")||"[]");
+    saved.unshift(story);
+    localStorage.setItem("teacherImpactStories",JSON.stringify(saved.slice(0,20)));
+    e.currentTarget.reset(); count.textContent="0";
+    document.getElementById("formStatus").textContent="تمت إضافة مشاركتك إلى جدار الأثر على هذا الجهاز.";
+  }catch(err){
+    document.getElementById("formStatus").textContent="تعذر الحفظ على هذا الجهاز. تحقق من إعدادات التخزين في المتصفح.";
+    if(submit) submit.disabled=false;
+    return;
+  }
+  if(submit) submit.disabled=false;
   renderWall();
   document.getElementById("wall").scrollIntoView({behavior:"smooth"});
 });
