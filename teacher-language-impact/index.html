@@ -18,19 +18,31 @@
           <small>معهد تعليم اللغة العربية لغير الناطقين بها</small>
         </span>
       </a>
-      <nav class="nav" aria-label="التنقل الرئيسي">
+      <nav class="nav" id="mainNav" aria-label="التنقل الرئيسي">
         <a href="#about">المبادرة</a>
         <a href="#language">لغة</a>
         <a href="#impact">أثر</a>
         <a href="#wall">جدار الأثر</a>
       </nav>
       <div class="header-actions">
+        <button id="menuButton" class="menu-button" type="button" aria-label="فتح القائمة" aria-controls="mainNav" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
         <button id="languageButton" class="language-button" type="button" title="عرض الصفحة بلغة الطالب">
           <span aria-hidden="true">🌐</span>
           <span id="languageStatus">لغة الطالب</span>
         </button>
         <a class="btn btn-small" href="#participate">شارك بأثرك</a>
       </div>
+    </div>
+    <div class="mobile-nav-wrap" id="mobileNavWrap">
+      <nav class="mobile-nav" aria-label="التنقل للجوال">
+        <a href="#about">المبادرة</a>
+        <a href="#language">لغة</a>
+        <a href="#impact">أثر</a>
+        <a href="#wall">جدار الأثر</a>
+        <a class="mobile-cta" href="#participate">شارك بأثرك</a>
+      </nav>
     </div>
   </header>
 
