@@ -222,3 +222,23 @@ document.getElementById("impactForm").addEventListener("submit",e=>{
   renderWall();
   document.getElementById("wall").scrollIntoView({behavior:"smooth"});
 });
+
+const menuButton=document.getElementById("menuButton");
+const mobileNavWrap=document.getElementById("mobileNavWrap");
+if(menuButton && mobileNavWrap){
+  const closeMobileMenu=()=>{
+    mobileNavWrap.classList.remove("open");
+    menuButton.setAttribute("aria-expanded","false");
+    menuButton.setAttribute("aria-label","فتح القائمة");
+  };
+  menuButton.addEventListener("click",()=>{
+    const open=!mobileNavWrap.classList.contains("open");
+    mobileNavWrap.classList.toggle("open",open);
+    menuButton.setAttribute("aria-expanded",String(open));
+    menuButton.setAttribute("aria-label",open?"إغلاق القائمة":"فتح القائمة");
+  });
+  mobileNavWrap.querySelectorAll("a").forEach(a=>a.addEventListener("click",closeMobileMenu));
+  window.addEventListener("resize",()=>{
+    if(window.innerWidth>=1100) closeMobileMenu();
+  });
+}
