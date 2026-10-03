@@ -1,11 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap');
 :root{
-  --green:#006C35;--green-2:#005A2B;--green-3:#EAF6EF;--ink:#161616;
-  --cream:#F7F7F5;--gold:#B78A35;--purple:#6E4B78;--white:#fff;--line:#E2E5E3;--muted:#5F6461;
-  --shadow:0 22px 54px rgba(22,22,22,.09);--radius:20px;
+  --green:#1B8354;
+  --green-2:#166A45;
+  --green-3:#F3FCF6;
+  --green-pressed:#104631;
+  --ink:#161616;
+  --cream:#F8F9FB;
+  --gold:#DBA102;
+  --purple:#80519F;
+  --white:#FFFFFF;
+  --line:#D2D6DB;
+  --muted:#596472;
+  --control:#6C737F;
+  --shadow:0 4px 8px -2px rgba(16,24,40,.10),0 2px 4px -2px rgba(16,24,40,.06);
+  --radius:4px;
 }
 *{box-sizing:border-box;min-width:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
-body{margin:0;font-family:"Tahoma","Arial",sans-serif;color:var(--ink);background:#fff;line-height:1.8;overflow-x:hidden}
+body{margin:0;font-family:"IBM Plex Sans Arabic","Tahoma","Arial",sans-serif;color:var(--ink);background:#fff;line-height:1.8;overflow-x:hidden}
 img,svg,video,canvas{max-width:100%;height:auto}
 a{text-decoration:none;color:inherit}
 button,input,textarea,select{font:inherit;max-width:100%}
@@ -175,79 +187,166 @@ html[dir="ltr"] [translate="no"]{direction:rtl;text-align:right}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
 
-/* Islamic University / Platform Code inspired institutional identity */
-.identity-stripe{
-  height:4px;
-  background:linear-gradient(90deg,var(--green) 0 55%,#161616 55% 72%,var(--gold) 72% 87%,var(--purple) 87% 100%);
+
+/* University official digital identity alignment:
+   official IU logo + Platforms Code design tokens */
+.site-header{
+  background:rgba(255,255,255,.98);
+  border-bottom:1px solid var(--line);
+  box-shadow:0 1px 2px rgba(16,24,40,.04);
 }
-.site-header{border-bottom-color:#E5E7E6}
-.brand{gap:14px}
-.brand-motif{
-  flex:0 0 44px;
-  width:44px;height:44px;
-  display:grid;grid-template-columns:1fr 1fr;gap:3px;
-  padding:5px;border:1px solid #DADFDA;border-radius:9px;background:#fff;
+.header-inner{min-height:84px}
+.brand{
+  gap:18px;
+  min-width:0;
+  align-items:center;
 }
-.brand-motif i{display:block;border-radius:2px;background:var(--green)}
-.brand-motif i:nth-child(2){background:#161616}
-.brand-motif i:nth-child(3){background:var(--gold)}
-.brand-motif i:nth-child(4){background:var(--purple)}
-.brand-wordmark{display:block}
-.brand-wordmark strong{font-size:14px;line-height:1.35;color:#161616}
-.brand-en{display:block;font-size:8px;letter-spacing:.08em;color:#727775;line-height:1.3;margin-top:2px}
-.brand-wordmark small{display:block;margin-top:3px;color:var(--green);font-weight:700}
+.iu-logo{
+  width:178px;
+  height:auto;
+  max-height:58px;
+  object-fit:contain;
+  flex:0 0 auto;
+}
+.brand-unit{
+  padding-inline-start:18px;
+  border-inline-start:1px solid var(--line);
+  color:var(--green-pressed);
+  font-size:13px;
+  font-weight:600;
+  line-height:1.55;
+  max-width:220px;
+}
+.nav a{
+  color:#384250;
+  font-weight:500;
+}
+.nav a:hover{color:var(--green)}
+.language-button{
+  border-color:var(--line);
+  border-radius:var(--radius);
+  color:#384250;
+}
+.menu-button{border-radius:var(--radius)}
+.btn{
+  border-radius:var(--radius);
+  background:var(--green);
+  border-color:var(--green);
+  min-height:44px;
+  box-shadow:none;
+}
+.btn:hover{background:var(--green-2);border-color:var(--green-2)}
+.btn:active{background:var(--green-pressed);border-color:var(--green-pressed)}
+.btn-ghost{
+  background:#fff;
+  color:var(--green);
+  border-color:var(--green);
+}
+.btn-ghost:hover{background:var(--green-3);color:var(--green-pressed)}
+
 .hero{
   background:
-    linear-gradient(115deg,rgba(0,108,53,.06),rgba(255,255,255,.98) 44%,rgba(110,75,120,.055)),
-    #fff;
+    linear-gradient(90deg,rgba(255,255,255,.97) 0%,rgba(255,255,255,.94) 56%,rgba(243,252,246,.90) 100%),
+    url("https://iu.edu.sa/media/Slides/iu-gate-sunset.webp?width=1200&format=webp&quality=70&token=N7SQ6H%2FKdkxufHqJGtOv4z6BuAit31414y%2BHa2KJNxo%3D");
+  background-size:cover;
+  background-position:center;
 }
-.hero:after{
-  content:"";position:absolute;inset:auto 0 0;height:6px;
-  background:linear-gradient(90deg,var(--green),var(--green) 58%,var(--gold) 58% 78%,var(--purple) 78%);
-  opacity:.9;
+.hero:after{display:none}
+.hero-pattern{display:none}
+.hero h1 .title-main{color:var(--ink)}
+.hero h1 .title-sub{color:var(--green)}
+.eyebrow,.kicker{
+  color:var(--green);
+  letter-spacing:0;
 }
-.hero-pattern{
-  border-radius:28px;
-  border-color:rgba(0,108,53,.12);
-  transform:rotate(45deg);
-  box-shadow:0 0 0 38px rgba(183,138,53,.045),0 0 0 76px rgba(110,75,120,.035);
-}
-.eyebrow,.kicker{color:var(--green)}
-.hero h1{letter-spacing:-.03em}
-.hero h1 .title-main{color:#161616}
-.hero h1 .title-sub{color:var(--green);position:relative}
-
 .hero-card{
-  background:linear-gradient(145deg,#006C35 0%,#005A2B 72%,#161616 100%);
-  border-radius:24px;
+  background:#fff;
+  color:var(--ink);
+  border:1px solid var(--line);
+  border-top:4px solid var(--green);
+  box-shadow:var(--shadow);
+  border-radius:var(--radius);
   transform:none;
 }
-html[dir="ltr"] .hero-card{transform:none}
-.hero-card:before{
-  content:"";position:absolute;inset-inline-end:18px;top:18px;width:54px;height:9px;
-  background:linear-gradient(90deg,var(--gold) 0 55%,var(--purple) 55%);
-  border-radius:2px;opacity:.95
+.hero-card:after,.hero-card:before{display:none}
+.quote-mark{color:var(--gold)}
+.student .avatar{
+  background:var(--green-3);
+  color:var(--green);
+  border:1px solid #B8EACB;
 }
+.student small{color:var(--muted);opacity:1}
+.mini-tags span{
+  border-color:#B8EACB;
+  color:var(--green-pressed);
+  background:var(--green-3);
+}
+
+.section-soft{background:var(--cream)}
 .section-dark{
-  background:linear-gradient(135deg,#005A2B 0%,#006C35 64%,#161616 160%);
+  background:var(--green-pressed);
 }
 .pillars article,.level-panel,.impact-card,.wall-card,.impact-form{
-  border-radius:18px;
+  border-radius:var(--radius);
+  box-shadow:none;
 }
-.pillars article{border-top:3px solid var(--green)}
+.pillars article{
+  border:1px solid var(--line);
+  border-top:4px solid var(--green);
+}
 .pillars article:nth-child(2){border-top-color:var(--gold)}
 .pillars article:nth-child(3){border-top-color:var(--purple)}
-.level-tab.active{box-shadow:0 5px 14px rgba(0,108,53,.16)}
-.chips span{border:1px solid rgba(0,108,53,.10)}
-.impact-card{border-top:4px solid var(--gold)}
-.wall-card{border-top:3px solid var(--green)}
+.level-tab{border-radius:var(--radius);border-color:var(--line)}
+.level-tab.active{
+  background:var(--green);
+  border-color:var(--green);
+  box-shadow:none;
+}
+.level-panel{border:1px solid var(--line)}
+.chips span{
+  border:1px solid #B8EACB;
+  background:var(--green-3);
+  border-radius:var(--radius);
+}
+.example{
+  border-inline-start-color:var(--green);
+  border-radius:var(--radius);
+  background:var(--green-3);
+}
+.prompt-list button{
+  border-radius:var(--radius);
+  border-color:var(--line);
+}
+.impact-card{
+  border:1px solid var(--line);
+  border-top:4px solid var(--gold);
+  background:#fff;
+}
+.impact-card input,.impact-form input,.impact-form select,.impact-form textarea{
+  border-radius:var(--radius);
+  border-color:var(--control);
+}
+.impact-form{
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+}
+.wall-card{
+  border:1px solid var(--line);
+  border-top:3px solid var(--green);
+}
 .wall-card:nth-child(3n+2){border-top-color:var(--gold)}
 .wall-card:nth-child(3n+3){border-top-color:var(--purple)}
-footer{border-top:1px solid var(--line);background:#fff}
+footer{
+  background:#fff;
+  border-top:1px solid var(--line);
+}
 .footer-inner strong{color:var(--green)}
+
 @media(max-width:767px){
-  .brand-motif{flex-basis:36px;width:36px;height:36px;padding:4px}
-  .brand-en{display:none}
-  .brand-wordmark small{display:none}
-  .hero h1 .title-sub:after{width:.42em;height:.42em}
+  .header-inner{min-height:70px}
+  .iu-logo{width:126px;max-height:44px}
+  .brand-unit{display:none}
+}
+@media(max-width:390px){
+  .iu-logo{width:116px}
 }
