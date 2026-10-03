@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b5f46">
+  <meta name="description" content="مبادرة المعلّم.. لغةٌ، أثرٌ — معهد تعليم اللغة العربية بالجامعة الإسلامية بالمدينة المنورة">
+  <title>المعلّم.. لغةٌ، أثرٌ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="العودة إلى بداية الصفحة">
+        <span class="brand-mark" aria-hidden="true">ع</span>
+        <span>
+          <strong>الجامعة الإسلامية بالمدينة المنورة</strong>
+          <small>معهد تعليم اللغة العربية لغير الناطقين بها</small>
+        </span>
+      </a>
+      <nav class="nav" aria-label="التنقل الرئيسي">
+        <a href="#about">المبادرة</a>
+        <a href="#language">لغة</a>
+        <a href="#impact">أثر</a>
+        <a href="#wall">جدار الأثر</a>
+      </nav>
+      <a class="btn btn-small" href="#participate">شارك بأثرك</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-pattern" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">مبادرة تعليمية بمناسبة اليوم العالمي للمعلم</span>
+          <h1>المعلّم..<br><span>لغةٌ، أثرٌ</span></h1>
+          <p class="hero-lead">نتعلّم العربية… ونكتب أثرَ من علّمنا.</p>
+          <p class="hero-text">تجربة لغوية تفاعلية تجعل من الاحتفاء بالمعلم موقفًا حقيقيًا لاستخدام العربية في التعبير، والكتابة، والتحدث، واستحضار الأثر.</p>
+          <div class="hero-actions">
+            <a class="btn" href="#participate">ابدأ المشاركة</a>
+            <a class="btn btn-ghost" href="#language">استكشف الأنشطة</a>
+          </div>
+          <div class="hero-metrics" aria-label="محاور المبادرة">
+            <div><b>4</b><span>مستويات لغوية</span></div>
+            <div><b>2</b><span>مساران: لغة وأثر</span></div>
+            <div><b>1</b><span>جدار يجمع القصص</span></div>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div class="quote-mark">“</div>
+          <p>كان معلمي يطلب مني أن أتحدث بالعربية حتى لو أخطأت. واليوم أصبحت أكثر ثقة.</p>
+          <div class="student">
+            <span class="avatar">ط</span>
+            <div><strong>طالب في المعهد</strong><small>قصة أثر</small></div>
+          </div>
+          <div class="mini-tags"><span>الثقة</span><span>الصبر</span><span>العربية</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">الغاية</span>
+          <h2>تنمية قدرات طلاب معهد تعليم اللغة العربية</h2>
+          <p>من خلال أنشطة لغوية قصيرة وهادفة تربط تعلم العربية بتجربة إنسانية أصيلة: أثر المعلم في الطالب.</p>
+        </div>
+        <div class="pillars">
+          <article>
+            <span class="num">01</span>
+            <h3>استخدام اللغة</h3>
+            <p>مفردات وتراكيب وتعبير شفهي وكتابي في سياقات حقيقية.</p>
+          </article>
+          <article>
+            <span class="num">02</span>
+            <h3>توثيق الأثر</h3>
+            <p>رسائل وقصص قصيرة تحفظ أثر المعلم في تجربة الطالب.</p>
+          </article>
+          <article>
+            <span class="num">03</span>
+            <h3>تنوع المستويات</h3>
+            <p>من جملة بسيطة للمبتدئ إلى قصة ومقال ومقابلة للمتقدم.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="language">
+      <div class="container">
+        <div class="section-heading row-heading">
+          <div>
+            <span class="kicker">المسار الأول</span>
+            <h2>لغة</h2>
+          </div>
+          <p>اختر مستواك، ثم استخدم العربية لتصف المعلم وتعبّر عن أثره.</p>
+        </div>
+
+        <div class="level-tabs" role="tablist" aria-label="المستويات اللغوية">
+          <button class="level-tab active" data-level="1">المستوى الأول</button>
+          <button class="level-tab" data-level="2">المستوى الثاني</button>
+          <button class="level-tab" data-level="3">المستوى الثالث</button>
+          <button class="level-tab" data-level="4">المستوى الرابع</button>
+        </div>
+
+        <div class="level-panel" id="levelPanel">
+          <div>
+            <span class="panel-label">مفردات</span>
+            <div class="chips" id="levelWords"></div>
+          </div>
+          <div>
+            <span class="panel-label">مهمتك</span>
+            <h3 id="levelTitle"></h3>
+            <p id="levelTask"></p>
+            <div class="example" id="levelExample"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="impact">
+      <div class="container split">
+        <div>
+          <span class="kicker">المسار الثاني</span>
+          <h2>أثر</h2>
+          <p class="large-copy">ما الأثر الذي تركه معلمك؟ اختر بداية، ثم أكملها بلغتك أنت.</p>
+          <div class="prompt-list">
+            <button data-prompt="علمني معلمي أن ">علمني…</button>
+            <button data-prompt="شجعني معلمي على ">شجعني على…</button>
+            <button data-prompt="لن أنسى عندما ">لن أنسى عندما…</button>
+            <button data-prompt="أشكره لأنه ">أشكره لأنه…</button>
+          </div>
+        </div>
+        <aside class="impact-card">
+          <span class="impact-label">معلمي في ثلاث كلمات</span>
+          <div class="word-cloud" id="wordCloud">
+            <b>الصبر</b><span>العلم</span><strong>القدوة</strong><i>التشجيع</i><span>الرحمة</span><b>الإخلاص</b>
+          </div>
+          <form id="threeWordsForm">
+            <label for="threeWords">أضف ثلاث كلمات</label>
+            <input id="threeWords" maxlength="40" placeholder="مثال: صبور، مشجع، قدوة">
+            <button class="btn btn-dark" type="submit">أضفها</button>
+          </form>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="participate">
+      <div class="container form-grid">
+        <div>
+          <span class="kicker kicker-light">شارك الآن</span>
+          <h2>اكتب أثرَ معلمك</h2>
+          <p>اكتب رسالة قصيرة بالعربية. يمكن أن تبدأ بجملة واحدة فقط؛ الأهم أن تكون من تجربتك.</p>
+          <div class="privacy-note">المشاركة التجريبية في هذه النسخة تُحفظ على جهازك فقط ولا تُرسل إلى خادم خارجي.</div>
+        </div>
+
+        <form class="impact-form" id="impactForm">
+          <div class="field-grid">
+            <label>اسم الطالب <small>(اختياري)</small>
+              <input name="student" maxlength="40" placeholder="اسمك">
+            </label>
+            <label>الدولة
+              <input name="country" maxlength="40" placeholder="مثال: إندونيسيا" required>
+            </label>
+          </div>
+          <div class="field-grid">
+            <label>المستوى
+              <select name="level" required>
+                <option value="">اختر</option>
+                <option>المستوى الأول</option>
+                <option>المستوى الثاني</option>
+                <option>المستوى الثالث</option>
+                <option>المستوى الرابع</option>
+              </select>
+            </label>
+            <label>اسم المعلم <small>(اختياري)</small>
+              <input name="teacher" maxlength="40" placeholder="اسم المعلم">
+            </label>
+          </div>
+          <label>رسالتك
+            <textarea id="messageField" name="message" maxlength="280" rows="5" placeholder="علمني معلمي أن..." required></textarea>
+            <span class="counter"><b id="charCount">0</b>/280</span>
+          </label>
+          <button class="btn btn-light" type="submit">أضف إلى جدار الأثر</button>
+          <p class="form-status" id="formStatus" role="status"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" id="wall">
+      <div class="container">
+        <div class="section-heading row-heading">
+          <div>
+            <span class="kicker">قصص الطلاب</span>
+            <h2>جدار الأثر</h2>
+          </div>
+          <p>نماذج من الكلمات التي تبقى بعد انتهاء الدرس.</p>
+        </div>
+        <div class="wall-grid" id="wallGrid"></div>
+      </div>
+    </section>
+
+    <section class="section section-soft">
+      <div class="container closing">
+        <span class="kicker">من العالم إلى المدينة</span>
+        <h2>لغة تجمعنا، وأثر يبقى.</h2>
+        <p>طلاب من ثقافات متعددة يلتقون في المدينة المنورة ويتعلمون العربية، ولكل واحد منهم قصة مع معلم ترك أثرًا.</p>
+        <a class="btn" href="#participate">اكتب قصتك</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>
+        <strong>المعلّم.. لغةٌ، أثرٌ</strong>
+        <span>معهد تعليم اللغة العربية لغير الناطقين بها</span>
+      </div>
+      <small>نموذج أولي للمبادرة — الجامعة الإسلامية بالمدينة المنورة</small>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
