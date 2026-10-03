@@ -1,8 +1,8 @@
 const levels = {
-  1:{words:["معلّم","طالب","درس","كتاب","علم","شكر","احترام","قدوة"],title:"صف معلمك بثلاث كلمات",task:"اختر ثلاث كلمات بسيطة تصف معلمك، ثم كوّن جملة قصيرة.",example:"مثال: معلمي طيب. معلمي يعلمني العربية."},
-  2:{words:["صبور","مخلص","متعاون","مبتسم","نافع","مجتهد","متفهم"],title:"اكتب رسالة قصيرة",task:"اكتب ثلاثة أسطر تبدأ بعبارة: تعلمت من معلمي…",example:"مثال: تعلمت من معلمي أن أتكلم بالعربية كل يوم. أشكره على صبره وتشجيعه."},
-  3:{words:["تجربة","موقف","تأثير","تشجيع","ثقة","تطور","نجاح"],title:"احكِ موقفًا لا تنساه",task:"اكتب من 80 إلى 100 كلمة عن موقف ترك أثرًا فيك.",example:"فكر في: ماذا حدث؟ ماذا قال معلمك؟ ماذا تغيّر بعد ذلك؟"},
-  4:{words:["أثر","منهج","توجيه","استقلالية","دافعية","قدوة","تعلّم"],title:"اكتب قصة أثر",task:"اكتب نصًا قصيرًا يشرح كيف غيّر معلمٌ طريقة تعلمك أو تفكيرك.",example:"يمكنك تحويل القصة لاحقًا إلى تسجيل صوتي أو مقابلة قصيرة."}
+  1:{words:["معلّم","طالب","درس","كتاب","علم","شكر","احترام","قدوة"],title:"صف معلمك بثلاث كلمات",task:"اختر ثلاث كلمات بسيطة تصف معلمك، ثم كوّن جملة قصيرة بالعربية.",example:"مثال: معلمي طيب. معلمي يعلمني العربية."},
+  2:{words:["صبور","مخلص","متعاون","مبتسم","نافع","مجتهد","متفهم"],title:"اكتب رسالة قصيرة",task:"اكتب ثلاثة أسطر بالعربية تبدأ بعبارة: تعلمت من معلمي…",example:"مثال: تعلمت من معلمي أن أتكلم بالعربية كل يوم. أشكره على صبره وتشجيعه."},
+  3:{words:["تجربة","موقف","تأثير","تشجيع","ثقة","تطور","نجاح"],title:"احكِ موقفًا لا تنساه",task:"اكتب من 80 إلى 100 كلمة بالعربية عن موقف ترك أثرًا فيك.",example:"فكر في: ماذا حدث؟ ماذا قال معلمك؟ ماذا تغيّر بعد ذلك؟"},
+  4:{words:["أثر","منهج","توجيه","استقلالية","دافعية","قدوة","تعلّم"],title:"اكتب قصة أثر",task:"اكتب نصًا عربيًا قصيرًا يشرح كيف غيّر معلمٌ طريقة تعلمك أو تفكيرك.",example:"يمكنك تحويل القصة لاحقًا إلى تسجيل صوتي أو مقابلة قصيرة."}
 };
 
 const seedStories = [
@@ -10,6 +10,76 @@ const seedStories = [
   {student:"طالب من نيجيريا",country:"نيجيريا",level:"المستوى الثالث",message:"شجعني معلمي على القراءة كل يوم، وبعد أشهر أصبحت أفهم النصوص وأتحدث بثقة أكبر."},
   {student:"طالب من البوسنة",country:"البوسنة",level:"المستوى الأول",message:"معلمي صبور ومبتسم. أنا أحب درس العربية معه."}
 ];
+
+const rtlLanguages = new Set(["ar","fa","ur","he","ps","sd","ug","ckb","dv"]);
+const browserLocale = (navigator.languages && navigator.languages[0]) || navigator.language || "ar";
+const browserLanguage = browserLocale.toLowerCase().split("-")[0];
+const urlParams = new URLSearchParams(location.search);
+const proxyLanguage = (urlParams.get("_x_tr_tl") || "").toLowerCase().split("-")[0];
+const currentTargetLanguage = proxyLanguage || browserLanguage;
+const isTranslateProxy = location.hostname.includes("translate.goog") || location.hostname.includes("translate.google");
+const stayArabic = urlParams.get("stay") === "ar";
+
+function languageName(code){
+  try{
+    const display = new Intl.DisplayNames([browserLocale], {type:"language"});
+    return display.of(code) || code.toUpperCase();
+  }catch(e){ return code.toUpperCase(); }
+}
+
+function setDirection(code){
+  document.documentElement.dir = rtlLanguages.has(code) ? "rtl" : "ltr";
+}
+
+function translationUrl(code){
+  const clean = new URL(location.href);
+  clean.searchParams.delete("stay");
+  clean.searchParams.delete("_x_tr_sl");
+  clean.searchParams.delete("_x_tr_tl");
+  clean.searchParams.delete("_x_tr_hl");
+  return "https://translate.google.com/translate?sl=ar&tl=" + encodeURIComponent(code) + "&u=" + encodeURIComponent(clean.toString());
+}
+
+function configureLanguageExperience(){
+  const button = document.getElementById("languageButton");
+  const status = document.getElementById("languageStatus");
+  const notice = document.getElementById("languageNotice");
+  const noticeText = document.getElementById("languageNoticeText");
+
+  if(isTranslateProxy){
+    setDirection(currentTargetLanguage);
+    status.textContent = languageName(currentTargetLanguage);
+    notice.hidden = false;
+    noticeText.textContent = "واجهة مترجمة آليًا — تبقى أنشطة العربية والنماذج التدريبية بالعربية.";
+    button.addEventListener("click",()=>{ location.href = "?stay=ar"; });
+    return;
+  }
+
+  setDirection("ar");
+  if(browserLanguage === "ar" || stayArabic){
+    status.textContent = browserLanguage === "ar" ? "العربية" : languageName(browserLanguage);
+    if(browserLanguage !== "ar"){
+      notice.hidden = false;
+      noticeText.textContent = "لغة جهازك: " + languageName(browserLanguage) + " — يمكنك عرض الشروحات بلغتك مع إبقاء أنشطة العربية كما هي.";
+      button.addEventListener("click",()=>{ location.href = translationUrl(browserLanguage); });
+    }else{
+      button.addEventListener("click",()=>{ notice.hidden = !notice.hidden; });
+    }
+    return;
+  }
+
+  status.textContent = languageName(browserLanguage);
+  notice.hidden = false;
+  noticeText.textContent = "تم اكتشاف لغة جهازك: " + languageName(browserLanguage) + " — سيتم فتح الواجهة المساندة بلغتك.";
+  button.addEventListener("click",()=>{ location.href = translationUrl(browserLanguage); });
+
+  const alreadyRedirected = sessionStorage.getItem("teacherImpactAutoLang") === browserLanguage;
+  if(!alreadyRedirected){
+    sessionStorage.setItem("teacherImpactAutoLang", browserLanguage);
+    setTimeout(()=>{ location.href = translationUrl(browserLanguage); }, 700);
+  }
+}
+configureLanguageExperience();
 
 function renderLevel(n){
   const data=levels[n];
@@ -50,7 +120,7 @@ function getStories(){
   catch(e){return seedStories}
 }
 function escapeHTML(str=""){
-  return str.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
+  return String(str).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
 }
 function renderWall(){
   const wall=document.getElementById("wallGrid");
