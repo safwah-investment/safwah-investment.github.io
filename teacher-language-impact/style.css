@@ -216,10 +216,7 @@ html[dir="ltr"] [translate="no"]{direction:rtl;text-align:right}
 .hero h1{letter-spacing:-.03em}
 .hero h1 .title-main{color:#161616}
 .hero h1 .title-sub{color:var(--green);position:relative}
-.hero h1 .title-sub:after{
-  content:"";display:inline-block;width:.5em;height:.5em;margin-inline-start:.18em;
-  border-radius:2px;background:var(--gold);vertical-align:.18em;transform:rotate(45deg)
-}
+
 .hero-card{
   background:linear-gradient(145deg,#006C35 0%,#005A2B 72%,#161616 100%);
   border-radius:24px;
