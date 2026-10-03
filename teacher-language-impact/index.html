@@ -24,9 +24,22 @@
         <a href="#impact">أثر</a>
         <a href="#wall">جدار الأثر</a>
       </nav>
-      <a class="btn btn-small" href="#participate">شارك بأثرك</a>
+      <div class="header-actions">
+        <button id="languageButton" class="language-button" type="button" title="عرض الصفحة بلغة الطالب">
+          <span aria-hidden="true">🌐</span>
+          <span id="languageStatus">لغة الطالب</span>
+        </button>
+        <a class="btn btn-small" href="#participate">شارك بأثرك</a>
+      </div>
     </div>
   </header>
+
+  <div class="language-notice" id="languageNotice" hidden>
+    <div class="container language-notice-inner">
+      <span id="languageNoticeText">يتم ضبط لغة الواجهة تلقائيًا حسب لغة جهاز الطالب.</span>
+      <a id="keepArabic" href="?stay=ar">العربية الأصلية</a>
+    </div>
+  </div>
 
   <main id="top">
     <section class="hero">
@@ -34,7 +47,7 @@
       <div class="container hero-grid">
         <div class="hero-copy">
           <span class="eyebrow">مبادرة تعليمية بمناسبة اليوم العالمي للمعلم</span>
-          <h1>المعلّم..<br><span>لغةٌ، أثرٌ</span></h1>
+          <h1 translate="no">المعلّم..<br><span>لغةٌ، أثرٌ</span></h1>
           <p class="hero-lead">نتعلّم العربية… ونكتب أثرَ من علّمنا.</p>
           <p class="hero-text">تجربة لغوية تفاعلية تجعل من الاحتفاء بالمعلم موقفًا حقيقيًا لاستخدام العربية في التعبير، والكتابة، والتحدث، واستحضار الأثر.</p>
           <div class="hero-actions">
@@ -44,18 +57,18 @@
           <div class="hero-metrics" aria-label="محاور المبادرة">
             <div><b>4</b><span>مستويات لغوية</span></div>
             <div><b>2</b><span>مساران: لغة وأثر</span></div>
-            <div><b>1</b><span>جدار يجمع القصص</span></div>
+            <div><b>100+</b><span>لغة مساندة للواجهة</span></div>
           </div>
         </div>
 
         <div class="hero-card">
           <div class="quote-mark">“</div>
-          <p>كان معلمي يطلب مني أن أتحدث بالعربية حتى لو أخطأت. واليوم أصبحت أكثر ثقة.</p>
+          <p translate="no">كان معلمي يطلب مني أن أتحدث بالعربية حتى لو أخطأت. واليوم أصبحت أكثر ثقة.</p>
           <div class="student">
             <span class="avatar">ط</span>
             <div><strong>طالب في المعهد</strong><small>قصة أثر</small></div>
           </div>
-          <div class="mini-tags"><span>الثقة</span><span>الصبر</span><span>العربية</span></div>
+          <div class="mini-tags" translate="no"><span>الثقة</span><span>الصبر</span><span>العربية</span></div>
         </div>
       </div>
     </section>
@@ -92,9 +105,9 @@
         <div class="section-heading row-heading">
           <div>
             <span class="kicker">المسار الأول</span>
-            <h2>لغة</h2>
+            <h2 translate="no">لغة</h2>
           </div>
-          <p>اختر مستواك، ثم استخدم العربية لتصف المعلم وتعبّر عن أثره.</p>
+          <p>اختر مستواك، ثم استخدم العربية لتصف المعلم وتعبّر عن أثره. تبقى مفردات التدريب والنماذج بالعربية مهما كانت لغة واجهة الطالب.</p>
         </div>
 
         <div class="level-tabs" role="tablist" aria-label="المستويات اللغوية">
@@ -106,14 +119,14 @@
 
         <div class="level-panel" id="levelPanel">
           <div>
-            <span class="panel-label">مفردات</span>
-            <div class="chips" id="levelWords"></div>
+            <span class="panel-label">مفردات عربية</span>
+            <div class="chips" id="levelWords" translate="no"></div>
           </div>
           <div>
             <span class="panel-label">مهمتك</span>
             <h3 id="levelTitle"></h3>
             <p id="levelTask"></p>
-            <div class="example" id="levelExample"></div>
+            <div class="example" id="levelExample" translate="no"></div>
           </div>
         </div>
       </div>
@@ -123,9 +136,9 @@
       <div class="container split">
         <div>
           <span class="kicker">المسار الثاني</span>
-          <h2>أثر</h2>
-          <p class="large-copy">ما الأثر الذي تركه معلمك؟ اختر بداية، ثم أكملها بلغتك أنت.</p>
-          <div class="prompt-list">
+          <h2 translate="no">أثر</h2>
+          <p class="large-copy">ما الأثر الذي تركه معلمك؟ اختر بداية عربية، ثم أكملها بلغتك العربية أنت.</p>
+          <div class="prompt-list" translate="no">
             <button data-prompt="علمني معلمي أن ">علمني…</button>
             <button data-prompt="شجعني معلمي على ">شجعني على…</button>
             <button data-prompt="لن أنسى عندما ">لن أنسى عندما…</button>
@@ -134,12 +147,12 @@
         </div>
         <aside class="impact-card">
           <span class="impact-label">معلمي في ثلاث كلمات</span>
-          <div class="word-cloud" id="wordCloud">
+          <div class="word-cloud" id="wordCloud" translate="no">
             <b>الصبر</b><span>العلم</span><strong>القدوة</strong><i>التشجيع</i><span>الرحمة</span><b>الإخلاص</b>
           </div>
           <form id="threeWordsForm">
-            <label for="threeWords">أضف ثلاث كلمات</label>
-            <input id="threeWords" maxlength="40" placeholder="مثال: صبور، مشجع، قدوة">
+            <label for="threeWords">أضف ثلاث كلمات عربية</label>
+            <input id="threeWords" maxlength="40" placeholder="مثال: صبور، مشجع، قدوة" translate="no">
             <button class="btn btn-dark" type="submit">أضفها</button>
           </form>
         </aside>
@@ -152,7 +165,7 @@
           <span class="kicker kicker-light">شارك الآن</span>
           <h2>اكتب أثرَ معلمك</h2>
           <p>اكتب رسالة قصيرة بالعربية. يمكن أن تبدأ بجملة واحدة فقط؛ الأهم أن تكون من تجربتك.</p>
-          <div class="privacy-note">المشاركة التجريبية في هذه النسخة تُحفظ على جهازك فقط ولا تُرسل إلى خادم خارجي.</div>
+          <div class="privacy-note">لغة الإرشادات تتكيف مع الطالب، أما الإجابة فهدفها ممارسة العربية. المشاركة التجريبية تُحفظ على جهازك فقط.</div>
         </div>
 
         <form class="impact-form" id="impactForm">
@@ -178,8 +191,8 @@
               <input name="teacher" maxlength="40" placeholder="اسم المعلم">
             </label>
           </div>
-          <label>رسالتك
-            <textarea id="messageField" name="message" maxlength="280" rows="5" placeholder="علمني معلمي أن..." required></textarea>
+          <label>رسالتك بالعربية
+            <textarea id="messageField" name="message" maxlength="280" rows="5" placeholder="علمني معلمي أن..." required translate="no"></textarea>
             <span class="counter"><b id="charCount">0</b>/280</span>
           </label>
           <button class="btn btn-light" type="submit">أضف إلى جدار الأثر</button>
@@ -195,9 +208,9 @@
             <span class="kicker">قصص الطلاب</span>
             <h2>جدار الأثر</h2>
           </div>
-          <p>نماذج من الكلمات التي تبقى بعد انتهاء الدرس.</p>
+          <p>نماذج من الكلمات العربية التي تبقى بعد انتهاء الدرس.</p>
         </div>
-        <div class="wall-grid" id="wallGrid"></div>
+        <div class="wall-grid" id="wallGrid" translate="no"></div>
       </div>
     </section>
 
@@ -214,7 +227,7 @@
   <footer>
     <div class="container footer-inner">
       <div>
-        <strong>المعلّم.. لغةٌ، أثرٌ</strong>
+        <strong translate="no">المعلّم.. لغةٌ، أثرٌ</strong>
         <span>معهد تعليم اللغة العربية لغير الناطقين بها</span>
       </div>
       <small>نموذج أولي للمبادرة — الجامعة الإسلامية بالمدينة المنورة</small>
