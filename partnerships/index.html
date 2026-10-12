@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#10283B" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="description" content="صفوة | إدارة الملاك والفرص والقرارات ومحاكاة حصص الاستثمار" />
+  <title>صفوة | منصة الاستثمار والشراكات والحوكمة</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="partnerships.css" />
+  <script src="core.js" defer></script>
+  <script src="app.js" defer></script>
+  <script src="partnership-core.js" defer></script>
+  <script src="word-export.js" defer></script>
+  <script src="partnerships.js" defer></script>
+  <script src="pwa.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#content">الانتقال إلى المحتوى</a>
+  <header class="site-header">
+    <div class="topbar shell">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">ص</div>
+        <div><strong>صفوة <span>الاستثمارية</span></strong><small>الاستثمار · الشراكات · الحوكمة</small></div>
+      </div>
+      <div class="header-actions">
+        <span class="local-tag" title="الحفظ محلي وليس سحابيًا"><span class="status-dot"></span> حفظ محلي فقط</span>
+        <button type="button" class="btn btn-outline btn-small" id="export-backup">نسخة احتياطية JSON</button>
+      </div>
+    </div>
+    <nav class="nav shell" aria-label="القائمة الرئيسية">
+      <button class="nav-link active" data-tab="dashboard" type="button">نظرة عامة</button>
+      <button class="nav-link" data-tab="owners" type="button">ملاك صفوة</button>
+      <button class="nav-link" data-tab="asset-owners" type="button">ملاك الأصول</button>
+      <button class="nav-link" data-tab="partnerships" type="button">استوديو الشراكات</button>
+      <button class="nav-link" data-tab="opportunities" type="button">الفرص</button>
+      <button class="nav-link" data-tab="decisions" type="button">القرارات</button>
+      <button class="nav-link" data-tab="scenarios" type="button">محاكاة الاستثمار</button>
+      <button class="nav-link" data-tab="reports" type="button">التقارير</button>
+    </nav>
+  </header>
+
+  <main class="shell main" id="content">
+    <div id="notice" class="toast" role="status" aria-live="polite" hidden></div>
+
+    <section class="panel active" data-panel="dashboard">
+      <div class="page-lead hero">
+        <div class="hero-copy">
+          <span class="eyebrow">SAFWAH • OWNERSHIP & OPPORTUNITIES</span>
+          <h1>من البيانات إلى شراكة قابلة للتنفيذ.</h1>
+          <p>مساحة عمل لصفوة تجمع الملاك والشركاء والفرص، وتقدير الحصص، وتوثيق الاتفاقات، ومقارنة البدائل وخطط التنفيذ في برنامج واحد.</p>
+          <div class="hero-buttons"><button type="button" class="btn btn-gold" data-tab="owners">إضافة ملاك صفوة</button><button type="button" class="btn btn-hero" data-tab="partnerships">إنشاء شراكة جديدة</button></div>
+        </div>
+        <div class="hero-decor" aria-hidden="true"><div class="decor-ring"><span>صفوة</span><small>INVESTMENT</small></div></div>
+      </div>
+      <div class="stat-grid" id="dashboard-stats"></div>
+      <div class="two-col">
+        <section class="card"><div class="section-head"><h2>جاهزية بيانات الملكية</h2><span class="subtle">شركة صفوة</span></div><div id="ownership-health"></div></section>
+        <section class="card"><div class="section-head"><h2>ملاحظات تحتاج معالجة</h2><span class="subtle">قائمة مراجعة</span></div><div id="dashboard-alerts"></div></section>
+      </div>
+      <section class="card"><div class="section-head"><h2>الفرص الحالية</h2><button type="button" class="text-action" data-tab="opportunities">عرض سجل الفرص ←</button></div><div id="dashboard-opportunities"></div></section>
+    </section>
+
+    <section class="panel" data-panel="owners">
+      <div class="page-lead"><span class="eyebrow">CORPORATE OWNERSHIP</span><h1>ملاك شركة صفوة</h1><p>هذا السجل خاص بملكية صفوة نفسها، وليس بملاك العقارات أو الفرص. يمكن تسجيل أفراد وجهات اعتبارية مع توضيح الملكية غير المباشرة على مستوى واحد.</p></div>
+      <div class="two-col form-layout">
+        <section class="card">
+          <div class="section-head"><h2 id="owner-form-heading">إضافة مالك</h2><span class="subtle">نسب قابلة للتحرير</span></div>
+          <form id="owner-form" class="form-grid">
+            <input type="hidden" name="id" />
+            <label class="field full">اسم المالك / الجهة<input required maxlength="160" name="name" placeholder="الاسم وفق السجل أو اتفاق الملاك" /></label>
+            <label class="field">الصفة<select name="type"><option value="person">شخص طبيعي</option><option value="entity">جهة اعتبارية / شركة</option></select></label>
+            <label class="field">نسبة الملكية المباشرة (%)<input required type="number" name="pct" min="0" max="100" step="any" placeholder="مثال: 25" /></label>
+            <label class="field">المساهمة المسجلة (ريال)<input type="number" name="capital" min="0" step="any" placeholder="اختياري" /></label>
+            <label class="field">الدور / الصفة الإدارية<input name="role" maxlength="120" placeholder="مالك، عضو مجلس، مدير..." /></label>
+            <label class="field full">ملاحظات الحقوق والالتزامات<textarea name="notes" rows="2" maxlength="2000" placeholder="توضيحات عن التصويت أو الحقوق الخاصة، إن وجدت"></textarea></label>
+            <label class="field full" id="beneficiary-field">الملاك النهائيون للجهة الاعتبارية<textarea name="beneficiaries" rows="3" maxlength="2500" placeholder="كل سطر: الاسم | نسبة ملكيته في الجهة&#10;مثال: مالك أول | 60&#10;مالك ثان | 40"></textarea><small>تحليل Look-through استرشادي لمستوى واحد، وليس تحققًا رسميًا من UBO.</small></label>
+            <div class="form-actions full"><button class="btn btn-primary" type="submit">حفظ المالك</button><button type="button" class="btn btn-outline" data-action="clear-owner">إلغاء التحرير</button></div>
+          </form>
+        </section>
+        <section class="card">
+          <div class="section-head"><h2>توزيع الملكية المباشرة</h2><span id="owners-count" class="subtle"></span></div>
+          <div class="ownership-total"><strong id="owners-total">0%</strong><span id="ownership-state" class="chip">مسودة</span></div>
+          <div class="progress"><span id="owners-progress"></span></div>
+          <p class="muted" id="owners-validation">أضف الملاك ونسبهم حتى يساوي المجموع 100%.</p>
+          <div class="divider"></div>
+          <div class="section-head"><h3>توثيق اعتماد سجل الملكية</h3></div>
+          <div class="field"><label for="ownership-approved-by">اسم الجهة أو الأطراف التي وافقت</label><input id="ownership-approved-by" maxlength="180" placeholder="كما هو في محضر الاتفاق" /></div>
+          <div class="field"><label for="ownership-approved-date">تاريخ تسجيل القرار</label><input type="date" id="ownership-approved-date" /></div>
+          <button type="button" class="btn btn-secondary full-button" data-action="approve-ownership">تسجيل اعتماد الملاك</button>
+          <p class="tiny-note">«معتمد» هنا وصف يدخله المستخدم للسجل، ولا يعني نقل ملكية نظاميًا أو التحقق من التوقيعات.</p>
+        </section>
+      </div>
+      <section class="card"><div class="section-head"><h2>سجل الملاك</h2><span class="subtle">ملكية مباشرة</span></div><div id="owners-list" class="table-scroll"></div></section>
+      <section class="card"><div class="section-head"><h2>الملكية غير المباشرة (Look-through)</h2><span class="subtle">بيانات مدخلة، غير موثقة</span></div><div id="ubo-list"></div></section>
+    </section>
+
+    <section class="panel" data-panel="asset-owners">
+      <div class="page-lead"><span class="eyebrow">ASSET COUNTERPARTIES</span><h1>ملاك الأصول والفرص</h1><p>سجل مستقل لأصحاب العقارات والمشاريع المعروضة، ولا يمنحهم أي حصة في شركة صفوة.</p></div>
+      <div class="two-col form-layout">
+        <section class="card"><div class="section-head"><h2 id="asset-owner-heading">إضافة مالك أصل</h2></div>
+          <form id="asset-owner-form" class="form-grid">
+            <input type="hidden" name="id" />
+            <label class="field full">الاسم / الكيان<input required name="name" maxlength="160" placeholder="مالك العقار أو الأصل" /></label>
+            <label class="field">نوع المالك<select name="type"><option value="person">فرد</option><option value="entity">شركة / مؤسسة</option><option value="other">جهة أخرى</option></select></label>
+            <label class="field">صفة الممثل<input name="representative" maxlength="140" placeholder="اختياري" /></label>
+            <label class="field full">ملاحظات التحقق والصكوك<textarea name="notes" rows="3" maxlength="1500" placeholder="لا تخزن أرقام هويات أو مستندات شخصية حساسة في هذه النسخة"></textarea></label>
+            <div class="form-actions full"><button type="submit" class="btn btn-primary">حفظ مالك الأصل</button><button type="button" class="btn btn-outline" data-action="clear-asset-owner">إلغاء</button></div>
+          </form>
+        </section>
+        <section class="card"><div class="section-head"><h2>فصل الأطراف</h2></div><div class="concept"><strong>ملاك صفوة</strong><p>ملكية الشركة وحوكمتها والقرارات المؤسسية.</p></div><div class="concept"><strong>ملاك الأصل</strong><p>حق التصرف في العقار أو المشروع محل الفرصة ويحتاج تحققًا مستقلًا.</p></div><div class="concept"><strong>المستثمر</strong><p>قد يشتري الأصل أو يدخل شريكًا، ولا يصبح مالكًا قبل اكتمال الإجراءات.</p></div></section>
+      </div>
+      <section class="card"><div class="section-head"><h2>سجل ملاك الأصول</h2></div><div class="table-scroll" id="asset-owners-list"></div></section>
+    </section>
+
+    <section class="panel" data-panel="opportunities">
+      <div class="page-lead"><span class="eyebrow">INVESTMENT PIPELINE</span><h1>الفرص الاستثمارية والعقارية</h1><p>تتبع العرض، وصحة بيانات ملاكه، وتقييمه الأولي، وعمولة صفوة المتوقعة. أي تقدير للعمولة مشروط بإتمام الصفقة وبنود الاتفاق.</p></div>
+      <section class="card"><div class="section-head"><h2 id="opportunity-heading">تسجيل فرصة جديدة</h2><span class="subtle">بيانات أولية</span></div>
+        <form id="opportunity-form" class="form-grid">
+          <input type="hidden" name="id" />
+          <label class="field full">اسم الفرصة<input required name="title" maxlength="180" placeholder="مثال: أرض تجارية في المدينة المنورة" /></label>
+          <label class="field">القطاع<select name="category"><option value="عقاري">عقاري</option><option value="صناعي">صناعي</option><option value="تجاري">تجاري</option><option value="خدمات">خدمات</option><option value="شراكة">شراكة</option><option value="أخرى">أخرى</option></select></label>
+          <label class="field">المدينة / الموقع<input name="city" maxlength="140" placeholder="المدينة المنورة" /></label>
+          <label class="field">السعر المطلوب (ريال)<input name="asking" type="number" min="0" step="any" placeholder="اختياري" /></label>
+          <label class="field">المساحة (م² إن وجدت)<input name="area" type="number" min="0" step="any" placeholder="اختياري" /></label>
+          <label class="field">عمولة الصفقة (%)<input name="commissionRate" type="number" min="0" max="100" step="any" value="2.5" /></label>
+          <label class="field">حصة المُحال إليه من العمولة (%)<input name="referralRate" type="number" min="0" max="100" step="any" value="0" /></label>
+          <label class="field">مرحلة الفرصة<select name="stage"><option value="new">جديدة</option><option value="review">تحت الدراسة</option><option value="ready">جاهزة للعرض</option><option value="negotiation">تحت التفاوض</option><option value="closed">مغلقة</option><option value="rejected">مستبعدة</option></select></label>
+          <label class="field">حالة المستندات<select name="documents"><option value="missing">غير مستكملة</option><option value="partial">مستندات جزئية</option><option value="checked">تمت مراجعتها داخليًا</option></select></label>
+          <label class="field full">رابط الموقع أو المستند العام (اختياري)<input name="url" type="url" placeholder="https://..." /></label>
+          <label class="field full">ملاحظات ومخاطر الفرصة<textarea name="notes" rows="3" maxlength="2500" placeholder="الفجوات، التراخيص، شروط التفاوض..."></textarea></label>
+          <div class="form-actions full"><button type="submit" class="btn btn-primary">حفظ الفرصة</button><button type="button" class="btn btn-outline" data-action="clear-opportunity">إلغاء التحرير</button></div>
+        </form>
+      </section>
+      <section class="card"><div class="section-head"><h2>قائمة الفرص</h2><span id="opportunities-count" class="subtle"></span></div><div id="opportunities-list"></div></section>
+    </section>
+
+    <section class="panel" data-panel="decisions">
+      <div class="page-lead"><span class="eyebrow">PARTNERSHIP GOVERNANCE</span><h1>القرارات وتصويت الملاك</h1><p>يرتبط التصويت بنسب ملكية مجمّدة وقت إنشاء القرار، منعًا لتغيير نتائج المحاضر السابقة عند تحديث سجل الملكية.</p></div>
+      <section class="card"><div class="section-head"><h2>فتح مسألة للتصويت</h2></div>
+        <form id="decision-form" class="form-grid">
+          <label class="field full">موضوع القرار<input name="title" maxlength="200" required placeholder="مثال: اعتماد عرض الشراء" /></label>
+          <label class="field">الفرصة المرتبطة (اختياري)<select id="decision-opportunity" name="opportunityId"><option value="">قرار عام</option></select></label>
+          <label class="field">عتبة الموافقة من إجمالي الملكية (%)<input type="number" name="threshold" min="1" max="100" step="any" value="75" required /></label>
+          <label class="field full">وصف القرار ونطاقه<textarea name="notes" rows="3" maxlength="3000" placeholder="نص المقترح والبدائل والقيود"></textarea></label>
+          <div class="form-actions full"><button class="btn btn-primary" type="submit">فتح التصويت</button></div>
+        </form>
+        <p class="tiny-note">العتبة افتراضية قابلة للتغيير ولا تحل محل نصاب نظام الشركة وعقد تأسيسها. لا ينشئ النظام موافقة أو توقيعًا ملزمًا.</p>
+      </section>
+      <section id="decisions-list"></section>
+    </section>
+
+    <section class="panel" data-panel="scenarios">
+      <div class="page-lead"><span class="eyebrow">EQUITY SIMULATION</span><h1>دخول مستثمر جديد</h1><p>قارن أثر ضخ مال للشركة (Cash-in)، أو شراء حصة من مالك قائم (Cash-out)، أو الجمع بينهما. المحاكاة لا تغيّر السجل المعتمد تلقائيًا.</p></div>
+      <div class="two-col form-layout">
+        <section class="card"><div class="section-head"><h2>مدخلات المحاكاة</h2></div>
+          <form id="scenario-form" class="form-grid">
+            <label class="field full">اسم المستثمر الجديد<input name="investorName" maxlength="150" value="مستثمر جديد" /></label>
+            <label class="field full">تقييم صفوة قبل الاستثمار (ريال)<input name="valuation" type="number" step="any" min="0" value="2000000" /></label>
+            <label class="field">مبلغ يدخل الشركة (ريال)<input name="cashIn" type="number" step="any" min="0" value="500000" /></label>
+            <label class="field">مبلغ لبائع حصة (ريال)<input name="cashOut" type="number" step="any" min="0" value="0" /></label>
+            <label class="field full">البائع عند شراء حصة<select name="sellerId" id="scenario-seller"><option value="">دون بائع</option></select></label>
+            <div class="full"><button type="submit" class="btn btn-primary full-button">احسب أثر الصفقة</button></div>
+          </form>
+          <p class="tiny-note">يفترض الحساب شراء الحصة بسعر ينسجم مع تقييم ما قبل الاستثمار، دون علاوة سيطرة أو خصم أو رسوم أو ضرائب.</p>
+        </section>
+        <section class="card"><div class="section-head"><h2>النتائج التقديرية</h2></div><div id="scenario-result"><div class="empty">أكمل سجل الملاك إلى 100% ثم أدخل شروط الصفقة.</div></div></section>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="partnerships">
+      <div class="page-lead studio-topline">
+        <div><span class="eyebrow">SAFWAH PARTNERSHIPS STUDIO</span><h1>استوديو الشراكات والاتفاقات</h1><p>منصة عملية لترتيب المساهمات وتقدير الحصص وقرارات الشركاء وأدوارهم، مع فصل «النسبة الاسترشادية» عن «الملكية المتفق عليها».</p></div>
+        <div class="studio-top-badge">محفوظ محليًا على هذا الجهاز · مسودات غير ملزمة</div>
+      </div>
+      <div id="partnership-studio" aria-live="polite"></div>
+    </section>
+
+    <section class="panel" data-panel="reports">
+      <div class="page-lead"><span class="eyebrow">REPORTING & DATA OWNERSHIP</span><h1>التقارير والنسخ الاحتياطية</h1><p>تقرير عمل قابل للطباعة والمشاركة بعد مراجعة محتواه. الملفات محلية على هذا الجهاز ولا توجد مزامنة بين الملاك في هذه النسخة.</p></div>
+      <section class="card"><div class="section-head"><h2>إدارة الملفات</h2></div>
+        <div class="report-actions">
+          <button type="button" class="btn btn-primary" data-action="print">طباعة تقرير / PDF</button>
+          <button type="button" class="btn btn-outline" data-action="export-html">تنزيل تقرير HTML</button>
+          <button type="button" class="btn btn-outline" data-action="export-csv">تصدير بيانات CSV</button>
+          <button type="button" class="btn btn-outline" data-action="export-json">نسخة احتياطية JSON</button>
+          <label class="btn btn-outline file-label">استيراد نسخة JSON<input type="file" id="import-file" accept=".json,application/json" hidden /></label>
+          <button type="button" class="btn btn-outline" data-action="load-demo">تحميل مثال تعليمي</button>
+        </div>
+        <p class="tiny-note">استيراد نسخة يستبدل بيانات هذه الجلسة بعد التأكيد. نزّل نسخة احتياطية أولًا. جميع الأسماء في المثال التعليمي افتراضية.</p>
+      </section>
+      <section class="card"><div class="section-head"><h2>معاينة التقرير</h2><span id="report-date" class="subtle"></span></div><article id="report-view" class="report-view"></article></section>
+    </section>
+  </main>
+
+  <dialog id="allocation-dialog" class="modal"><form id="allocation-form" method="dialog">
+    <div class="modal-head"><h2 id="allocation-title">ملاك الفرصة</h2><button type="button" class="icon-button" data-action="close-allocation" aria-label="إغلاق">×</button></div>
+    <p class="muted">خصص نسبة لكل مالك أصل. لا يُعتبر التوزيع مكتملًا حتى تساوي النسب 100%، وحتى تتحقق المستندات خارج هذه المنصة.</p>
+    <div id="allocation-list"></div>
+    <div class="modal-actions"><button class="btn btn-primary" type="submit">حفظ توزيع الملكية</button><button class="btn btn-outline" type="button" data-action="close-allocation">إلغاء</button></div>
+  </form></dialog>
+
+  <footer class="site-footer"><div class="shell footer-inner"><span>صفوة الاستثمارية | منصة الشراكات وإدارة الملاك والفرص</span><span>لا يثبت الملكية أو صحة المستندات أو اكتمال الموافقات</span><a href="https://safwah-group.com" target="_blank" rel="noopener noreferrer">الموقع المؤسسي</a></div></footer>
+  <div class="print-only" id="print-area"></div>
+</body>
+</html>

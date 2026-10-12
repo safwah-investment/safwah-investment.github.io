@@ -1,0 +1,9 @@
+{
+  "name": "safwah-investment-workspace",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Safwah multi-owner investment and partnership workspace",
+  "scripts": {
+    "test": "node --test tests/*.test.cjs"
+  }
+}
