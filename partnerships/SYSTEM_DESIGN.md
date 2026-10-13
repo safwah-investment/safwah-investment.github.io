@@ -1,73 +1,34 @@
-# نظام صفوة 2.0 | التصميم والمنطق والحدود
+# Safwah v3 — architecture notes
 
-## القرارات المعمارية
+## Trust boundaries
 
-- الموقع **Static SPA** متعدد الأقسام دون Build Step، ومناسب لـ GitHub Pages.
-- يعاد استخدام محرك الملاك والفرص والتصويت في النسخة الأولى دون قطع بياناته.
-- استوديو الشراكات له محرك مستقل `partnership-core.js` ودورة تحرير خاصة `partnerships.js`، لكنه يحفظ السجلات في نفس `localStorage` داخل `state.partnerships` في ملف واحد.
-- جميع القيم الاقتصادية والمساهمات والاتفاقات والمهام تُخزن في كائن ملف مستقل `project.id`.
-- الحالة المعلنة للقرار هي `pending` أو `proposed` أو `approved` (اعتماد داخلي فقط). تعديل ملكية متفق عليها أو قيمة مرتبطة بها يعيد الحالة إلى `proposed`.
+- GitHub Pages runs a static application. All owner/partnership files remain localStorage by default, with no server-side database or shared-user store.
+- The AI assistant defaults to deterministic explanations (`advisor-core.js`), not a generative model. It uses the current app snapshot from `SafwahApp.getSnapshot()` and the open partnership file from `SafwahPartnerships.getCurrent()`.
+- Cloud mode is **opt-in**. `advisor-core.buildContext(..., share=true)` intentionally strips client, owner and partner names, addresses, documents, legal IDs, exact titles and freeform legal clauses.
+- Supabase Edge Function `safwah-advisor` is auth-only (JWT verified by the platform and Supabase Auth), requires a verified preauthorized email, and reads the model key from server-side env. The public frontend only gets a Supabase publishable key.
+- Cloud AI requests do not alter company data, contracts, votes, or ownership. Unauthorized or unconfigured cloud mode reports an error and permits fallback to local rules.
 
-## الفرق بين كيانات الملكية
+## Model boundary
 
-1. `owners` = الملاك الحقيقيون لـ «شركة صفوة» كما يدونهم المستخدم.
-2. `assetOwners` = ملاك الأصول/العروض من خارج الشركة.
-3. `opportunities` = الفرص التي تربط مالك أصل بالعرض، وقد تستهدف مستثمرًا مختلفًا عن مالك صفوة.
-4. `partnerships[].parties` = أطراف ملف الشراكة المحدد. يمكن نسخ ملاك صفوة إليها كلقطة **غير متزامنة تلقائيًا**.
-5. `decisions` = قرارات ملاك صفوة العامة ولقطات نسبهم التاريخية.
-6. `partnerships[].terms` = قرارات تفاوضية خاصة بكل شراكة؛ ليست مساوية لسجلات تصويت الشركة.
+- Company ownership: `state.owners`.
+- Asset counterparties: `state.assetOwners`.
+- Opportunity: `state.opportunities` and associated asset ownership.
+- Partnership: `state.partnerships[]` with contributions, payments, status, profit, final shares, execution and three governance registers:
+  - `rolesDetailed[]`: partner / timing / reward kind / amount or percentage / impact of stopping / status.
+  - `rightsDetailed[]`: scope (activity, brand, branch) / right owner / ownership, profit or license / amount or percentage / status.
+  - `authoritiesDetailed[]`: decision / decision owner / financial limit / quorum / signatory / reporting / status.
+- Editing an advanced register resets its own status to `proposed`; it does not silently change company ownership, other agreements, or the final share decision.
+- Output includes the advanced registers; no new legal rights are created by their presence.
 
-## المنهج الحسابي
+## Test boundary
 
-### مساهمات المشروع التشغيلي والصفقات
+- Pure functions tested with `node --test tests/*.test.cjs`.
+- Local browser functionality in `tests/browser_checks.py` and `tests/browser_v3.py`.
+- AI provider correctness, actual Supabase Auth email redirects, billing, and shared synchronization require independent end-to-end production verification. No secret is placed in the website.
 
-قيمة الطرف = النقد + الأصول + حقوق الملكية الفكرية + الالتزامات القابلة للتقويم + قيمة العمل غير المدفوع.
+## Open items
 
-قيمة العمل = `max(0, الأجر السوقي الشهري − المقابل المستلم) × الأشهر`.
-
-الحصة الاسترشادية = قيمة الطرف / مجموع القيم لكل الأطراف × 100.
-
-### المشروع الناشئ
-
-تستخدم ملفات المشاريع الناشئة فقط أوزانًا تفاوضية استرشادية قابلة للاختيار، وليست نسبًا نظامية أو تقييمات خبراء. مسارات المشروع التشغيلي لا تستخدم أوزان الشركات الناشئة.
-
-### دخول مستثمر في شركة قائمة
-
-```
-Post-money = Pre-money + Cash-in
-Investor % = (Cash-in + Cash-out) / Post-money × 100
-Existing owner % = Previous % × Pre-money/Post-money
-Seller % -= Cash-out / Post-money × 100
-```
-
-المبلغ المدفوع إلى البائع لا يعامل كتمويل داخل الشركة، ويُراجع عدم تجاوز القيمة الاسترشادية لحصة البائع.
-
-### المضاربة
-
-رأس مال مقدم من الممول وعمل من المضارب ونسب ربح موجبة مجموعها 100%، بينما **لا تُشتق ملكية شركة من الربح**. الحالات المركبة تحتاج مراجعة فقهية وقانونية مستقلة.
-
-### دفعات رأس المال
-
-كل `commitment` يظهر مرة واحدة بقيمة التزام، وكل `paid` يرتبط بمعرف ذلك الالتزام. لذلك لا يضاف إلى مجموع الالتزامات مرة ثانية. كشف التكرار والتنبيهات ليست مراجعة محاسبية شاملة.
-
-### المحاكاة التشغيلية
-
-الفائض السنوي البسيط = الإيرادات − مصروفات التشغيل. مدة استرداد الاستثمار = CAPEX / الفائض السنوي الموجب. البدائل المتشائمة والمتفائلة تغير الإيرادات/المصروفات وفق معاملات ثابتة اختبارية؛ **ليست توقعات سوق موثقة**.
-
-## إجراءات تصدير البيانات
-
-- نسخة JSON للمشروع قابلة للتصدير والاستيراد كنسخة مستقلة.
-- النسخ الشامل لصفوة في `app.js` يضم الملفات كلها.
-- Word يولّد OOXML في الواجهة دون إرسال النص إلى خدمة خارجية.
-- PDF عبر طباعة المتصفح. 
-- HTML مستقل قابل للقراءة، مع تهريب نصوص المستخدمين.
-
-## ضبط الجودة
-
-- وحدات المحركات الحسابية مستقلة عن الواجهة ويمكن اختبارها بـ Node.
-- خمسة اختبارات تفاعلية في Chromium للتحقق من إنشاء ملف، الحساب، المضاربة، الاستثمار المختلط، Word، والتجاوب.
-- أي خادم سحابي أو دخول Google غير مُفعل وغير مختبَر في هذا الإصدار.
-
-## مخاطر المرحلة الإنتاجية
-
-تحتاج المنصة قبل الاستخدام متعدد الأجهزة: مصادقة وربط كل مالك بجهة محددة، مصفوفة صلاحيات، عزل بيانات الجهات، سجل تغييرات غير قابل للتلاعب، حماية من إعادة الإرسال، نسخة احتياطية ومراجعة أمنية وشرعية ونظامية. وسيتطلب دمج مساعد ذكاء اصطناعي حقيقي معالجة إضافية للخصوصية ومنع إرسال البيانات الحساسة بلا إذن.
+1. Identity and cloud sync with per-entity permissions, secure RLS, revision-locked writes, verified signatures, and audit logs.
+2. Global AI quota and spend alarms with administrator-facing controls.
+3. Legal specialist verification by Saudi qualified adviser; UI links are sources, not legal opinions.
+4. Independent security penetration test before storing confidential financial or real-estate documents.

@@ -1,6 +1,6 @@
 /* Application shell only; private project data is never precached. */
-const VERSION='safwah-v2-20261012';
-const SHELL=['./','./index.html','./styles.css','./partnerships.css','./core.js','./app.js','./partnership-core.js','./partnerships.js','./word-export.js','./pwa.js','./manifest.webmanifest','./assets/favicon.svg','./assets/icon-192.png','./assets/icon-512.png'];
+const VERSION='safwah-v3-20261012';
+const SHELL=['./','./index.html','./styles.css','./partnerships.css','./core.js','./app.js','./partnership-core.js','./partnerships.js','./word-export.js','./advisor-config.js','./advisor-core.js','./advisor-ui.js','./advisor.css','./pwa.js','./manifest.webmanifest','./assets/favicon.svg','./assets/icon-192.png','./assets/icon-512.png'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(VERSION).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('safwah-v')&&k!==VERSION).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',event=>{

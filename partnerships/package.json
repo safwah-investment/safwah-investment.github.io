@@ -1,8 +1,8 @@
 {
   "name": "safwah-investment-workspace",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
-  "description": "Safwah multi-owner investment and partnership workspace",
+  "description": "Safwah portfolio, partnerships, governance, offline advisor, secure AI proxy scaffold",
   "scripts": {
     "test": "node --test tests/*.test.cjs"
   }
