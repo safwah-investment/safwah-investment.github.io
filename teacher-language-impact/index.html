@@ -204,7 +204,7 @@
           <span class="kicker kicker-light">شارك الآن</span>
           <h2>اكتب أثرَ معلمك</h2>
           <p>اكتب رسالة قصيرة بالعربية. يمكن أن تبدأ بجملة واحدة فقط؛ الأهم أن تكون من تجربتك.</p>
-          <div class="privacy-note"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><span>لغة الإرشادات تتكيف مع الطالب، أما الإجابة فهدفها ممارسة العربية. المشاركة التجريبية تُحفظ على جهازك فقط.</span></div>
+          <div class="privacy-note"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><span>لغة الإرشادات تتكيف مع الطالب، أما الإجابة فهدفها ممارسة العربية. تُرسل المشاركة إلى إدارة المبادرة للمراجعة، ويظهر اسمك ودولتك ومستواك ورسالتك للعامة بعد اعتمادها. يمكنك ترك الاسم فارغًا.</span></div>
         </div>
 
         <form class="impact-form" id="impactForm">
@@ -234,7 +234,7 @@
             <textarea id="messageField" name="message" maxlength="280" rows="5" placeholder="علمني معلمي أن..." required translate="no"></textarea>
             <span class="counter"><b id="charCount">0</b>/280</span>
           </label>
-          <button class="btn btn-light" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-send"></use></svg><span>أضف إلى جدار الأثر</span></button>
+          <button class="btn btn-light" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-send"></use></svg><span>أرسل للمراجعة</span></button>
           <p class="form-status" id="formStatus" role="status"></p>
         </form>
       </div>
@@ -249,6 +249,8 @@
           </div>
           <p>نماذج من الكلمات العربية التي تبقى بعد انتهاء الدرس.</p>
         </div>
+        <p id="wallStatus" role="status"></p>
+        <button id="wallRetry" class="btn btn-ghost" type="button">تحديث المشاركات</button>
         <div class="wall-grid" id="wallGrid" translate="no"></div>
       </div>
     </section>
@@ -273,6 +275,8 @@
     </div>
   </footer>
 
-  <script src="script.js?v=6"></script>
+  <script src="supabase-config.js?v=1"></script>
+  <script src="supabase-client.js?v=1"></script>
+  <script src="script.js?v=7"></script>
 </body>
 </html>

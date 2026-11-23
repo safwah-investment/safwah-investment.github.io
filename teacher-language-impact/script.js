@@ -5,11 +5,6 @@ const levels = {
   4:{words:["أثر","منهج","توجيه","استقلالية","دافعية","قدوة","تعلّم"],title:"اكتب قصة أثر",task:"اكتب نصًا عربيًا قصيرًا يشرح كيف غيّر معلمٌ طريقة تعلمك أو تفكيرك.",example:"يمكنك تحويل القصة لاحقًا إلى تسجيل صوتي أو مقابلة قصيرة."}
 };
 
-const seedStories = [
-  {student:"طالب من إندونيسيا",country:"إندونيسيا",level:"المستوى الثاني",message:"علمني معلمي ألا أخاف من الخطأ، وأن الكلام الكثير هو طريق إتقان العربية."},
-  {student:"طالب من نيجيريا",country:"نيجيريا",level:"المستوى الثالث",message:"شجعني معلمي على القراءة كل يوم، وبعد أشهر أصبحت أفهم النصوص وأتحدث بثقة أكبر."},
-  {student:"طالب من البوسنة",country:"البوسنة",level:"المستوى الأول",message:"معلمي صبور ومبتسم. أنا أحب درس العربية معه."}
-];
 
 const rtlLanguages = new Set(["ar","fa","ur","he","ps","sd","ug","ckb","dv"]);
 const browserLocale = (navigator.languages && navigator.languages[0]) || navigator.language || "ar";
@@ -187,51 +182,66 @@ wordForm.addEventListener("submit",e=>{
   input.value="";
 });
 
-function getStories(){
-  try{return [...JSON.parse(localStorage.getItem("teacherImpactStories")||"[]"),...seedStories]}
-  catch(e){return seedStories}
-}
 function escapeHTML(str=""){
-  return String(str).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
+  return String(str).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 }
-function renderWall(){
+async function renderWall(){
   const wall=document.getElementById("wallGrid");
-  wall.innerHTML=getStories().map((s,i)=>`
-    <article class="wall-card ${i===0?"new":""}">
-      <span class="flag">${escapeHTML(s.country||"طالب دولي")}</span>
-      <blockquote>“${escapeHTML(s.message)}”</blockquote>
-      <footer>${escapeHTML(s.student||"طالب في المعهد")} · ${escapeHTML(s.level||"")}</footer>
-    </article>`).join("");
+  const status=document.getElementById("wallStatus");
+  status.textContent="جارٍ تحميل المشاركات المعتمدة…";
+  try{
+    const stories=await TeacherImpactDB.listApproved();
+    wall.innerHTML=stories.filter(s=>s.status==="approved").map(s=>`
+      <article class="wall-card">
+        <span class="flag">${escapeHTML(s.country)}</span>
+        <blockquote>“${escapeHTML(s.message)}”</blockquote>
+        <footer>${escapeHTML(s.student_name||"طالب في المعهد")} · ${escapeHTML(s.level)}</footer>
+      </article>`).join("");
+    status.textContent=stories.length ? "" : "لا توجد مشاركات معتمدة حتى الآن.";
+  }catch(error){
+    wall.replaceChildren();
+    status.textContent=TeacherImpactDB.isConfigured()
+      ? "تعذر تحميل المشاركات. حاول مرة أخرى."
+      : "سيُتاح جدار الأثر عند تفعيل استقبال المشاركات.";
+  }
 }
+document.getElementById("wallRetry").addEventListener("click",renderWall);
 renderWall();
 
-document.getElementById("impactForm").addEventListener("submit",e=>{
+let submitting=false;
+document.getElementById("impactForm").addEventListener("submit",async e=>{
   e.preventDefault();
-  const fd=new FormData(e.currentTarget);
+  if(submitting)return;
+  const form=e.currentTarget;
+  const status=document.getElementById("formStatus");
+  if(!form.reportValidity())return;
+  const fd=new FormData(form);
   const story={
-    student:(fd.get("student")||"طالب في المعهد").toString().trim(),
-    country:fd.get("country").toString().trim(),
-    level:fd.get("level").toString(),
-    teacher:fd.get("teacher").toString().trim(),
-    message:fd.get("message").toString().trim()
+    student_name:String(fd.get("student")||"").trim(),
+    country:String(fd.get("country")||"").trim(),
+    level:String(fd.get("level")||"").trim(),
+    teacher_name:String(fd.get("teacher")||"").trim(),
+    message:String(fd.get("message")||"").trim()
   };
-  if(!story.country||!story.level||!story.message)return;
-  const submit=e.currentTarget.querySelector('button[type="submit"]');
-  if(submit) submit.disabled=true;
-  try{
-    const saved=JSON.parse(localStorage.getItem("teacherImpactStories")||"[]");
-    saved.unshift(story);
-    localStorage.setItem("teacherImpactStories",JSON.stringify(saved.slice(0,20)));
-    e.currentTarget.reset(); count.textContent="0";
-    document.getElementById("formStatus").textContent="تمت إضافة مشاركتك إلى جدار الأثر على هذا الجهاز.";
-  }catch(err){
-    document.getElementById("formStatus").textContent="تعذر الحفظ على هذا الجهاز. تحقق من إعدادات التخزين في المتصفح.";
-    if(submit) submit.disabled=false;
-    return;
+  if(!story.country||!story.level||!story.message){
+    status.textContent="يرجى كتابة الدولة والمستوى والرسالة.";return;
   }
-  if(submit) submit.disabled=false;
-  renderWall();
-  document.getElementById("wall").scrollIntoView({behavior:"smooth"});
+  const submit=form.querySelector('button[type="submit"]');
+  submitting=true;
+  submit.disabled=true;
+  form.setAttribute("aria-busy","true");
+  status.textContent="جارٍ إرسال المشاركة…";
+  try{
+    await TeacherImpactDB.submit(story);
+    form.reset();count.textContent="0";
+    status.textContent="تم استلام مشاركتك للمراجعة. ستظهر في جدار الأثر بعد اعتمادها.";
+  }catch(error){
+    status.textContent=TeacherImpactDB.isConfigured()
+      ? "تعذر تأكيد إرسال المشاركة. احتفظ بنصك وحاول لاحقًا."
+      : "استقبال المشاركات غير مفعّل بعد. احتفظ بنصك وحاول لاحقًا.";
+  }finally{
+    submitting=false;submit.disabled=false;form.removeAttribute("aria-busy");
+  }
 });
 
 const menuButton=document.getElementById("menuButton");
